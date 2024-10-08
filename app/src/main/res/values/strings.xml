@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Conversor</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="trainerNameQuestion">¿Cómo te llamas?</string>
+    <string name="companionName">Has elegido a [POKE_NAME] como compañero</string>
+</resources>
