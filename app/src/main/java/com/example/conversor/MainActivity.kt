@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.conversor.activities.PokemonActivity
-import com.example.conversor.activities.PokimonActivity
 import com.example.conversor.entities.Jugador
 import com.example.conversor.entities.Pokemon
 import com.example.conversor.entities.PokemonType
@@ -20,7 +19,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var imgBulbasaur: ImageView
     lateinit var imgPikachu: ImageView
     lateinit var txtTrainerName: EditText
-    lateinit var btnTest: Button
     lateinit var entrenador: Jugador
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +30,6 @@ class MainActivity : AppCompatActivity() {
         imgBulbasaur = findViewById<ImageView>(R.id.imgBulbasaur)
         imgPikachu = findViewById<ImageView>(R.id.imgPikachu)
         txtTrainerName = findViewById(R.id.txtTrainerName)
-        btnTest = findViewById(R.id.btnTest)
 
         entrenador = Jugador()
         entrenador.Id = 1
@@ -40,67 +37,64 @@ class MainActivity : AppCompatActivity() {
         onClickOtherActivities()
         onTrainerNameChanged()
 
-        btnTest.setOnClickListener{
-            val intent = Intent(this, PokimonActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun onClickOtherActivities(){
         imgCharmander.setOnClickListener {
             if(entrenador.Name != "") {
+                entrenador.Pokemones.clear()
                 var poke = Pokemon()
                 poke.Id = 1
                 poke.Name = "Charmander"
-                /*poke.Image = imgCharmander*/
                 poke.Type = PokemonType.FUEGO
                 poke.Attack = 50
                 poke.Defense = 25
                 entrenador.Pokemones.add(poke)
 
-                startActivityPokemon(poke.Name)
+                startActivityPokemon()
             }
         }
         imgSquirtle.setOnClickListener {
             if(entrenador.Name != "") {
+                entrenador.Pokemones.clear()
                 var poke = Pokemon()
                 poke.Id = 2
                 poke.Name = "Squirtle"
-                /*poke.Image = imgSquirtle*/
                 poke.Type = PokemonType.AGUA
                 poke.Attack = 35
                 poke.Defense = 25
                 entrenador.Pokemones.add(poke)
 
-                startActivityPokemon(poke.Name)
+                startActivityPokemon()
             }
         }
         imgBulbasaur.setOnClickListener {
             if(entrenador.Name != "") {
+                entrenador.Pokemones.clear()
                 var poke = Pokemon()
                 poke.Id = 3
                 poke.Name = "Bulbasaur"
-                /*poke.Image = imgBulbasaur*/
                 poke.Type = PokemonType.PLANTA
                 poke.Attack = 25
                 poke.Defense = 55
+                poke.maxHp = 150
                 entrenador.Pokemones.add(poke)
 
-                startActivityPokemon(poke.Name)
+                startActivityPokemon()
             }
         }
         imgPikachu.setOnClickListener {
             if(entrenador.Name != "") {
+                entrenador.Pokemones.clear()
                 var poke = Pokemon()
                 poke.Id = 4
                 poke.Name = "Pikachu"
-                /*poke.Image = imgPikachu*/
                 poke.Type = PokemonType.ELECTRICO
                 poke.Attack = 40
                 poke.Defense = 40
                 entrenador.Pokemones.add(poke)
 
-                startActivityPokemon(poke.Name)
+                startActivityPokemon()
             }
         }
     }
@@ -136,9 +130,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startActivityPokemon(name: String){
+    private fun startActivityPokemon(){
         val intent = Intent(this, PokemonActivity::class.java)
-        intent.putExtra("fragmento", name)
         intent.putExtra("entrenador", entrenador)
         startActivity(intent)
     }
