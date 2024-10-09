@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.conversor.activities.PokemonActivity
+import com.example.conversor.activities.PokimonActivity
 import com.example.conversor.entities.Jugador
 import com.example.conversor.entities.Pokemon
 import com.example.conversor.entities.PokemonType
@@ -18,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var imgBulbasaur: ImageView
     lateinit var imgPikachu: ImageView
     lateinit var txtTrainerName: EditText
+    lateinit var btnTest: Button
     lateinit var entrenador: Jugador
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,12 +32,18 @@ class MainActivity : AppCompatActivity() {
         imgBulbasaur = findViewById<ImageView>(R.id.imgBulbasaur)
         imgPikachu = findViewById<ImageView>(R.id.imgPikachu)
         txtTrainerName = findViewById(R.id.txtTrainerName)
+        btnTest = findViewById(R.id.btnTest)
 
         entrenador = Jugador()
         entrenador.Id = 1
 
         onClickOtherActivities()
         onTrainerNameChanged()
+
+        btnTest.setOnClickListener{
+            val intent = Intent(this, PokimonActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun onClickOtherActivities(){
