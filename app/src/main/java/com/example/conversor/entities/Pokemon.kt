@@ -16,17 +16,27 @@ data class Pokemon(
         var SecondaryType: PokemonType = PokemonType._NONE,
         var Exp: Int = 0,
         var Attack: Int = 0,
-        var Defense: Int = 0): Parcelable {
-    var currentHp: Int = 100
-    var maxHp: Int = 100
-        set(value) {
-            field = value
-            currentHp = value
-        }
+        var Defense: Int = 0,
+        var maxHp: Int = 100,
+        var currentHp: Int = maxHp,
+        var Movements: @RawValue MutableList<MovimientosPokemon> = mutableListOf()): Parcelable {
+
 
     fun takeDamage(damage: Int) {
         currentHp -= damage
         if (currentHp < 0) currentHp = 0
     }
     fun isDefeated(): Boolean = currentHp <= 0
+
+    fun escalarVida(nivel: Int) {
+        maxHp += ((maxHp * 2 * nivel) / 100) + nivel + 10
+    }
+
+    fun escalarAtaque(nivel: Int) {
+        Attack += ((Attack * 2 * nivel) / 100) + 5
+    }
+
+    fun escalarDefensa(nivel: Int) {
+        Defense += ((Defense * 2 * nivel) / 100) + 5
+    }
 }

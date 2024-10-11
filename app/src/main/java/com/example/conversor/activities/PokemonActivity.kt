@@ -14,6 +14,7 @@ import com.example.conversor.R
 import com.example.conversor.entities.Jugador
 import com.example.conversor.entities.Pokemon
 import com.example.conversor.entities.PokemonType
+import com.example.conversor.services.PokemonService
 import kotlinx.coroutines.*
 
 class PokemonActivity : AppCompatActivity() {
@@ -36,7 +37,6 @@ class PokemonActivity : AppCompatActivity() {
     private lateinit var playerPokemon: Pokemon
     private lateinit var enemyPokemon: Pokemon
 
-    private val wildPokemon: List<String> = listOf("Charmander", "Squirtle", "Bulbasaur")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pokemon)
@@ -145,37 +145,26 @@ class PokemonActivity : AppCompatActivity() {
     }
 
     private fun createPokemonFromWildness(): Pokemon{
-        var poke = Pokemon(1, Level= 5, Exp = 0)
+        val poke = PokemonService.WildPokemons.random()
 
         try {
-            when (val randomPoke = wildPokemon.random()) {
+            when (poke.Name) {
                 "Charmander" -> {
-                    poke.Name = randomPoke
-                    poke.maxHp = 175
-                    poke.Attack = 50
-                    poke.Defense = 30
-                    poke.Type = PokemonType.FUEGO
                     imgPokemonSalvaje.setImageResource(R.drawable.charmander)
                 }
 
                 "Squirtle" -> {
-                    poke.Name = randomPoke
-                    poke.maxHp = 200
-                    poke.Attack = 30
-                    poke.Defense = 50
-                    poke.Type = PokemonType.AGUA
                     imgPokemonSalvaje.setImageResource(R.drawable.squirtle)
                 }
 
                 "Bulbasaur" -> {
-                    poke.Name = randomPoke
-                    poke.maxHp = 250
-                    poke.Attack = 30
-                    poke.Defense = 40
-                    poke.Type = PokemonType.PLANTA
                     imgPokemonSalvaje.setImageResource(R.drawable.bulbasaur)
                 }
             }
+            poke.escalarAtaque(5)
+            poke.escalarDefensa(5)
+            poke.escalarVida(5)
+            poke.currentHp = poke.maxHp
         }catch (ex:Exception){
             println("Mensaje de error: ${ex.message}")
         }

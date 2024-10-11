@@ -2,6 +2,7 @@ package com.example.conversor
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.storage.StorageManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
@@ -12,6 +13,7 @@ import com.example.conversor.activities.PokemonActivity
 import com.example.conversor.entities.Jugador
 import com.example.conversor.entities.Pokemon
 import com.example.conversor.entities.PokemonType
+import com.example.conversor.services.PokemonService
 
 class MainActivity : AppCompatActivity() {
     lateinit var imgCharmander: ImageView
@@ -31,8 +33,10 @@ class MainActivity : AppCompatActivity() {
         imgPikachu = findViewById<ImageView>(R.id.imgPikachu)
         txtTrainerName = findViewById(R.id.txtTrainerName)
 
-        entrenador = Jugador()
-        entrenador.Id = 1
+        PokemonService.initializePokemonMovements()
+        PokemonService.initializeWildPokemon()
+
+        entrenador = initializeTrainer()
 
         onClickOtherActivities()
         onTrainerNameChanged()
@@ -40,16 +44,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onClickOtherActivities(){
-        imgCharmander.setOnClickListener {
+        imgBulbasaur.setOnClickListener {
             if(entrenador.Name != "") {
                 entrenador.Pokemones.clear()
-                var poke = Pokemon()
-                poke.Id = 1
-                poke.Name = "Charmander"
-                poke.Type = PokemonType.FUEGO
-                poke.Attack = 50
-                poke.Defense = 25
-                entrenador.Pokemones.add(poke)
+                entrenador.Pokemones.add(PokemonService.WildPokemons.filter { it.Id == 1 }.first())
 
                 startActivityPokemon()
             }
@@ -57,28 +55,15 @@ class MainActivity : AppCompatActivity() {
         imgSquirtle.setOnClickListener {
             if(entrenador.Name != "") {
                 entrenador.Pokemones.clear()
-                var poke = Pokemon()
-                poke.Id = 2
-                poke.Name = "Squirtle"
-                poke.Type = PokemonType.AGUA
-                poke.Attack = 35
-                poke.Defense = 25
-                entrenador.Pokemones.add(poke)
+                entrenador.Pokemones.add(PokemonService.WildPokemons.filter { it.Id == 4 }.first())
 
                 startActivityPokemon()
             }
         }
-        imgBulbasaur.setOnClickListener {
+        imgCharmander.setOnClickListener {
             if(entrenador.Name != "") {
                 entrenador.Pokemones.clear()
-                var poke = Pokemon()
-                poke.Id = 3
-                poke.Name = "Bulbasaur"
-                poke.Type = PokemonType.PLANTA
-                poke.Attack = 25
-                poke.Defense = 55
-                poke.maxHp = 150
-                entrenador.Pokemones.add(poke)
+                entrenador.Pokemones.add(PokemonService.WildPokemons.filter { it.Id == 7 }.first())
 
                 startActivityPokemon()
             }
@@ -86,13 +71,7 @@ class MainActivity : AppCompatActivity() {
         imgPikachu.setOnClickListener {
             if(entrenador.Name != "") {
                 entrenador.Pokemones.clear()
-                var poke = Pokemon()
-                poke.Id = 4
-                poke.Name = "Pikachu"
-                poke.Type = PokemonType.ELECTRICO
-                poke.Attack = 40
-                poke.Defense = 40
-                entrenador.Pokemones.add(poke)
+                entrenador.Pokemones.add(PokemonService.WildPokemons.filter { it.Id == 11 }.first())
 
                 startActivityPokemon()
             }
@@ -100,6 +79,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun onTrainerNameChanged(){
         try {
+            txtTrainerName.setText(entrenador.Name)
             txtTrainerName.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     try{
@@ -130,7 +110,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initializeTrainer(): Jugador{
+        var jugador = Jugador()
+        var infoPlayer = PokemonService.readDataFromLocal(window.decorView.rootView, PokemonService.LOCALFILENAME)
+        if(infoPlayer != ""){
+            jugador = Jugador(Name = infoPlayer.split('#')[0], Money = infoPlayer.split('#')[1].toInt())
+        }
+        return jugador
+    }
+
     private fun startActivityPokemon(){
+        PokemonService.writeDataFromLocal(window.decorView.rootView, PokemonService.LOCALFILENAME, "${entrenador.Name}#${entrenador.Money}")
+
         val intent = Intent(this, PokemonActivity::class.java)
         intent.putExtra("entrenador", entrenador)
         startActivity(intent)
