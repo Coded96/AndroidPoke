@@ -7,81 +7,112 @@
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".activities.PokemonActivity"
-    android:id="@+id/combateLayout">
-
-    <!--<FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="100"/>-->
+    android:id="@+id/combateLayout"
+    android:weightSum="100">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:layout_height="0dp"
+        android:layout_weight="30"
+        android:orientation="horizontal"
+        android:weightSum="100">
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/imgPokemonPropio"/>
-
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:orientation="vertical"
+            android:weightSum="100"
+            android:padding="10pt">
             <TextView
-                android:id="@+id/playerNameTextView"
+                android:id="@+id/txtPokeEnemyName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="30"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/playerHpTextView"
+                android:id="@+id/txtPokeEnemyLvl"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="0dp"
+                android:layout_weight="20" />
+
+            <TextView
+                android:id="@+id/txtPokeEnemyHp"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="20" />
 
             <ProgressBar
-                android:id="@+id/playerHpProgressBar"
+                android:id="@+id/progbarPokeEnemy"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="10"
                 android:max="100" />
-
         </LinearLayout>
 
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:id="@+id/imgPokemonSalvaje"
+            android:src="@drawable/bulbasaur"
+            android:padding="15pt"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="30"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:id="@+id/imgPokemonPropio"
+            android:src="@drawable/bulbasaur"
+            android:padding="15pt"/>
+
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/imgPokemonSalvaje"/>
-
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:orientation="vertical"
+            android:weightSum="100"
+            android:padding="10pt">
             <TextView
-                android:id="@+id/enemyNameTextView"
+                android:id="@+id/txtPokePlayerName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="30"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/enemyHpTextView"
+                android:id="@+id/txtPokePlayerLvl"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="0dp"
+                android:layout_weight="20" />
+
+            <TextView
+                android:id="@+id/txtPokePlayerHp"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="20" />
 
             <ProgressBar
-                android:id="@+id/enemyHpProgressBar"
+                android:id="@+id/progbarPokePlayer"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="10"
                 android:max="100" />
-
         </LinearLayout>
 
     </LinearLayout>
@@ -89,14 +120,15 @@
     <Button
         android:id="@+id/attackButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="30"
         android:layout_marginTop="16dp"
         android:text="Attack" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="10"
         android:layout_marginTop="16dp">
 
         <TextView

@@ -1,10 +1,12 @@
 package com.example.conversor.activities
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,17 +14,21 @@ import com.example.conversor.R
 import com.example.conversor.entities.Jugador
 import com.example.conversor.entities.Pokemon
 import com.example.conversor.entities.PokemonType
+import kotlinx.coroutines.*
 
 class PokemonActivity : AppCompatActivity() {
 
-    private lateinit var playerNameTextView: TextView
-    private lateinit var playerHpTextView: TextView
-    private lateinit var playerHpProgressBar: ProgressBar
-    private lateinit var enemyNameTextView: TextView
-    private lateinit var enemyHpTextView: TextView
-    private lateinit var enemyHpProgressBar: ProgressBar
+    private lateinit var txtPokePlayerName: TextView
+    private lateinit var txtPokePlayerLvl: TextView
+    private lateinit var txtPokePlayerHp: TextView
+    private lateinit var progbarPokePlayer: ProgressBar
+    private lateinit var txtPokeEnemyName: TextView
+    private lateinit var txtPokeEnemyLvl: TextView
+    private lateinit var txtPokeEnemyHp: TextView
+    private lateinit var progbarPokeEnemy: ProgressBar
     private lateinit var attackButton: Button
     private lateinit var battleLogTextView: TextView
+    private lateinit var scrollView: ScrollView
     private lateinit var imgPokemonPropio: ImageView
     private lateinit var imgPokemonSalvaje: ImageView
     private lateinit var combateLayout: LinearLayout
@@ -40,12 +46,19 @@ class PokemonActivity : AppCompatActivity() {
 
         initializeViews()
         initializePokemon(entrenador.Pokemones[0])
-
         updateUI()
+
+        txtPokePlayerName.text = playerPokemon.Name
+        txtPokePlayerLvl.text = "Lv ${playerPokemon.Level}"
+        txtPokeEnemyName.text = enemyPokemon.Name
+        txtPokeEnemyLvl.text = "Lv ${enemyPokemon.Level}"
 
         attackButton.setOnClickListener {
             performBattleRound()
         }
+
+        battleLogTextView.styledText("Un ${enemyPokemon.Name} salvaje apareció")
+        battleLogTextView.styledText("${playerPokemon.Name} está listo para el combate. ¿Que debería hacer?")
     }
 
     private fun initializePokemon(poke: Pokemon) {
@@ -73,39 +86,44 @@ class PokemonActivity : AppCompatActivity() {
     }
 
     private fun initializeViews() {
-        playerNameTextView = findViewById(R.id.playerNameTextView)
-        playerHpTextView = findViewById(R.id.playerHpTextView)
-        playerHpProgressBar = findViewById(R.id.playerHpProgressBar)
-        enemyNameTextView = findViewById(R.id.enemyNameTextView)
-        enemyHpTextView = findViewById(R.id.enemyHpTextView)
-        enemyHpProgressBar = findViewById(R.id.enemyHpProgressBar)
+        txtPokePlayerName = findViewById(R.id.txtPokePlayerName)
+        txtPokePlayerLvl = findViewById(R.id.txtPokePlayerLvl)
+        txtPokePlayerHp = findViewById(R.id.txtPokePlayerHp)
+        progbarPokePlayer = findViewById(R.id.progbarPokePlayer)
+
+        txtPokeEnemyName = findViewById(R.id.txtPokeEnemyName)
+        txtPokeEnemyLvl = findViewById(R.id.txtPokeEnemyLvl)
+        txtPokeEnemyHp = findViewById(R.id.txtPokeEnemyHp)
+        progbarPokeEnemy = findViewById(R.id.progbarPokeEnemy)
+
         attackButton = findViewById(R.id.attackButton)
         battleLogTextView = findViewById(R.id.battleLogTextView)
+        scrollView = (battleLogTextView.parent as ScrollView)
+
         imgPokemonPropio = findViewById(R.id.imgPokemonPropio)
         imgPokemonSalvaje = findViewById(R.id.imgPokemonSalvaje)
+
         combateLayout = findViewById(R.id.combateLayout)
     }
 
     private fun updateUI() {
-        playerNameTextView.text = playerPokemon.Name
-        playerHpTextView.text = "${playerPokemon.currentHp}/${playerPokemon.maxHp}"
-        playerHpProgressBar.progress = (playerPokemon.currentHp * 100) / playerPokemon.maxHp
+        txtPokePlayerHp.text = "${playerPokemon.currentHp}/${playerPokemon.maxHp}"
+        progbarPokePlayer.progress = (playerPokemon.currentHp * 100) / playerPokemon.maxHp
 
-        enemyNameTextView.text = enemyPokemon.Name
-        enemyHpTextView.text = "${enemyPokemon.currentHp}/${enemyPokemon.maxHp}"
-        enemyHpProgressBar.progress = (enemyPokemon.currentHp * 100) / enemyPokemon.maxHp
+        txtPokeEnemyHp.text = "${enemyPokemon.currentHp}/${enemyPokemon.maxHp}"
+        progbarPokeEnemy.progress = (enemyPokemon.currentHp * 100) / enemyPokemon.maxHp
     }
 
 
     private fun performBattleRound() {
         val playerDamage = calculateDamage(playerPokemon, enemyPokemon,true)
         enemyPokemon.takeDamage(playerDamage)
-        battleLogTextView.append("${playerPokemon.Name} deals $playerDamage damage to ${enemyPokemon.Name}\n")
+        battleLogTextView.styledText("${playerPokemon.Name} deals $playerDamage damage to ${enemyPokemon.Name}")
 
         if (!enemyPokemon.isDefeated()) {
             val enemyDamage = calculateDamage(enemyPokemon, playerPokemon,false)
             playerPokemon.takeDamage(enemyDamage)
-            battleLogTextView.append("${enemyPokemon.Name} deals $enemyDamage damage to ${playerPokemon.Name}\n")
+            battleLogTextView.styledText("${enemyPokemon.Name} deals $enemyDamage damage to ${playerPokemon.Name}")
         }
 
         updateUI()
@@ -117,13 +135,13 @@ class PokemonActivity : AppCompatActivity() {
 
     private fun calculateDamage(attacker: Pokemon, defender: Pokemon, isOwnPokemon: Boolean): Int {
         val baseDamage = (attacker.Attack - defender.Defense / 2).coerceAtLeast(1)
-        return (baseDamage * (0.8 + Math.random() * if(isOwnPokemon) 0.8 else 0.4)).toInt()
+        return (baseDamage * (0.8 + Math.random() * if(isOwnPokemon) 0.8 else 0.2)).toInt()
     }
 
     private fun endBattle() {
         attackButton.isEnabled = false
         val winner = if (playerPokemon.isDefeated()) enemyPokemon.Name else playerPokemon.Name
-        battleLogTextView.append("Battle ended. $winner wins!")
+        battleLogTextView.styledText("Battle ended. $winner wins!")
     }
 
     private fun createPokemonFromWildness(): Pokemon{
@@ -165,4 +183,13 @@ class PokemonActivity : AppCompatActivity() {
         return poke
     }
 
+    private fun TextView.styledText(text: String){
+        for (char in text) {
+            battleLogTextView.append(char.toString()) // Añade cada letra una a una
+            scrollView.post {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN) // Hace scroll hacia abajo
+            }
+        }
+        battleLogTextView.append("\n") // Al final añade un salto de línea
+    }
 }
